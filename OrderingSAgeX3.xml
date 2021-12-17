@@ -51,7 +51,7 @@
         <queueBufferSize>1000</queueBufferSize>
       </sourceConnectorProperties>
       <scheme>FILE</scheme>
-      <host>c:/dev_chv/test</host>
+      <host>c:/dev_chv/in</host>
       <fileFilter>*.txt</fileFilter>
       <regex>false</regex>
       <directoryRecursion>false</directoryRecursion>
@@ -95,12 +95,12 @@ try {
 var DELline = msg..row;
 var maxligne = DELline.length();
 
-logger.info(maxligne);
+//logger.info(maxligne);
 
 for (i=0;i&lt;maxligne;i++)
 {
 //inserer les données...FIXME:
-var result = dbConn.executeUpdate(&quot;INSERT INTO ordsage (c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, c13, c14, c15, c16, c17,filename,statut) VALUES (&apos;&quot;+msg[&apos;row&apos;][0][&apos;column1&apos;].toString()+&quot;&apos;,&apos;&quot;+msg[&apos;row&apos;][0][&apos;column2&apos;].toString()+&quot;&apos;,&apos;&quot;+msg[&apos;row&apos;][0][&apos;column3&apos;].toString()+&quot;&apos;,&apos;&quot;+msg[&apos;row&apos;][0][&apos;column4&apos;].toString()+&quot;&apos;,&apos;&quot;+msg[&apos;row&apos;][0][&apos;column5&apos;].toString()+&quot;&apos;,&apos;&quot;+msg[&apos;row&apos;][0][&apos;column6&apos;].toString()+&quot;&apos;,&apos;&quot;+msg[&apos;row&apos;][0][&apos;column7&apos;].toString()+&quot;&apos;,&apos;&quot;+msg[&apos;row&apos;][0][&apos;column8&apos;].toString()+&quot;&apos;,&apos;&quot;+msg[&apos;row&apos;][0][&apos;column9&apos;].toString()+&quot;&apos;,&apos;&quot;+msg[&apos;row&apos;][0][&apos;column10&apos;].toString()+&quot;&apos;,&apos;&quot;+msg[&apos;row&apos;][0][&apos;column11&apos;].toString()+&quot;&apos;,&apos;&quot;+msg[&apos;row&apos;][0][&apos;column12&apos;].toString()+&quot;&apos;,&apos;&quot;+msg[&apos;row&apos;][0][&apos;column13&apos;].toString()+&quot;&apos;,&apos;&quot;+msg[&apos;row&apos;][0][&apos;column14&apos;].toString()+&quot;&apos;,&apos;&quot;+msg[&apos;row&apos;][0][&apos;column15&apos;].toString()+&quot;&apos;,&apos;&quot;+msg[&apos;row&apos;][0][&apos;column16&apos;].toString()+&quot;&apos;,&apos;&quot;+msg[&apos;row&apos;][0][&apos;column17&apos;].toString()+&quot;&apos;,&apos;&quot;+$(&apos;originalFilename&apos;)+&quot;&apos;,&apos;0&apos;)&quot;);
+var result = dbConn.executeUpdate(&quot;INSERT INTO ordsage (c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, c13, c14, c15, c16, c17,filename,statut) VALUES (&apos;&quot;+msg[&apos;row&apos;][i][&apos;column1&apos;].toString()+&quot;&apos;,&apos;&quot;+msg[&apos;row&apos;][i][&apos;column2&apos;].toString()+&quot;&apos;,&apos;&quot;+msg[&apos;row&apos;][i][&apos;column3&apos;].toString()+&quot;&apos;,&apos;&quot;+msg[&apos;row&apos;][i][&apos;column4&apos;].toString()+&quot;&apos;,&apos;&quot;+msg[&apos;row&apos;][i][&apos;column5&apos;].toString()+&quot;&apos;,&apos;&quot;+msg[&apos;row&apos;][i][&apos;column6&apos;].toString()+&quot;&apos;,&apos;&quot;+msg[&apos;row&apos;][i][&apos;column7&apos;].toString()+&quot;&apos;,&apos;&quot;+msg[&apos;row&apos;][i][&apos;column8&apos;].toString()+&quot;&apos;,&apos;&quot;+msg[&apos;row&apos;][i][&apos;column9&apos;].toString()+&quot;&apos;,&apos;&quot;+msg[&apos;row&apos;][i][&apos;column10&apos;].toString()+&quot;&apos;,&apos;&quot;+msg[&apos;row&apos;][i][&apos;column11&apos;].toString()+&quot;&apos;,&apos;&quot;+msg[&apos;row&apos;][i][&apos;column12&apos;].toString()+&quot;&apos;,&apos;&quot;+msg[&apos;row&apos;][i][&apos;column13&apos;].toString()+&quot;&apos;,&apos;&quot;+msg[&apos;row&apos;][i][&apos;column14&apos;].toString()+&quot;&apos;,&apos;&quot;+msg[&apos;row&apos;][i][&apos;column15&apos;].toString()+&quot;&apos;,&apos;&quot;+msg[&apos;row&apos;][i][&apos;column16&apos;].toString()+&quot;&apos;,&apos;&quot;+msg[&apos;row&apos;][i][&apos;column17&apos;].toString()+&quot;&apos;,&apos;&quot;+$(&apos;originalFilename&apos;)+&quot;&apos;,&apos;0&apos;)&quot;);
 }
 
 } finally {
@@ -388,7 +388,7 @@ return;</undeployScript>
     <metadata>
       <enabled>true</enabled>
       <lastModified>
-        <time>1639689122826</time>
+        <time>1639735875570</time>
         <timezone>Europe/Paris</timezone>
       </lastModified>
       <pruningSettings>

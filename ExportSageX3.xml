@@ -3,7 +3,7 @@
   <nextMetaDataId>2</nextMetaDataId>
   <name>ExportSageX3</name>
   <description></description>
-  <revision>22</revision>
+  <revision>25</revision>
   <sourceConnector version="3.11.0">
     <metaDataId>0</metaDataId>
     <name>sourceConnector</name>
@@ -12,7 +12,7 @@
       <pollConnectorProperties version="3.11.0">
         <pollingType>INTERVAL</pollingType>
         <pollOnStart>true</pollOnStart>
-        <pollingFrequency>300000</pollingFrequency>
+        <pollingFrequency>15000</pollingFrequency>
         <pollingHour>0</pollingHour>
         <pollingMinute>0</pollingMinute>
         <cronJobs/>
@@ -56,24 +56,56 @@
       <password>admin</password>
       <select>var dbConn;
 var result;
+var destinationpath=&quot;c:/dev_chv/out&quot;;
+
+function ecrire_fichier( nomfichier, lignes)
+{
+FileUtil.write(destinationpath+&apos;/&apos;+nomfichier, false, lignes);
+}
 
 try {
 	dbConn = DatabaseConnectionFactory.createDatabaseConnection(&apos;org.postgresql.Driver&apos;,&apos;jdbc:postgresql://localhost:5432/postgres&apos;,&apos;postgres&apos;,&apos;admin&apos;);
 
-	result = dbConn.executeCachedQuery(&quot;SELECT c1,c2,c3,c4,c4,c5,c6,c7,c8,c9,c10,c11,c12,c13,c14,c15,c16,c17,filename FROM ordsage WHERE statut=&apos;1&apos; ORDER by filename, c1, c4, c2 ASC&quot;);
-	// You may access this result below with $(&apos;column_name&apos;)
+	result = dbConn.executeCachedQuery(&quot;SELECT c1,to_char(c2,&apos;YYYYMMDD&apos;) as \&quot;c2\&quot;,c3,c4,c4,c5,c6,c7,c8,c9,c10,c11,c12,c13,c14,c15,c16,c17,filename FROM ordsage WHERE statut=&apos;1&apos; ORDER by filename, c1, c4, c2 asc&quot;);
 
 
 //traitement du résultat...:
-var lignes=&quot;&quot;
+var lignes=&quot;&quot;;
+var fichier=&quot;&quot;;
+var currfichier=&quot;&quot;;
+
+
 while (result.next())
 {
+
+     //lecture du nom du fichier
+     fichier=result.getString(&apos;filename&apos;);
+     
+	//traiter selon le nom du fichier...
+	if (currfichier==&apos;&apos;) 
+	{currfichier=fichier;}
+	else 
+	{
+		if (currfichier!=fichier)
+		{
+			//detection changement de fichier
+			//ecrire les lignes dans le fichier
+			if (lignes!=&apos;&apos;){ecrire_fichier(currfichier,lignes)}
+			//remplacer par le nouveau nom...
+			currfichier=fichier;
+			lignes=&apos;&apos;; //reset lignes
+		}
+	}
+
+	//lire les données
 	lignes=lignes+result.getString(&apos;c1&apos;)+&quot;;&quot;+result.getString(&apos;c2&apos;)+&quot;;&quot;+result.getString(&apos;c3&apos;)+&quot;;&quot;+result.getString(&apos;c4&apos;)+&quot;;&quot;+result.getString(&apos;c5&apos;)+&quot;;&quot;+result.getString(&apos;c6&apos;)+&quot;;&quot;+result.getString(&apos;c7&apos;)+&quot;;&quot;+result.getString(&apos;c8&apos;)+&quot;;&quot;+result.getString(&apos;c9&apos;)+&quot;;&quot;+result.getString(&apos;c10&apos;)+&quot;;&quot;+result.getString(&apos;c11&apos;)+&quot;;&quot;+result.getString(&apos;c12&apos;)+&quot;;&quot;+result.getString(&apos;c13&apos;)+&quot;;&quot;+result.getString(&apos;c14&apos;)+&quot;;&quot;+result.getString(&apos;c15&apos;)+&quot;;&quot;+result.getString(&apos;c16&apos;)+&quot;;&quot;+result.getString(&apos;c17&apos;)+&quot;\n&quot;;
+	
 }
 
-FileUtil.write(&apos;c:/dev_chv/test.txt&apos;, false, lignes);
+if (lignes!=&apos;&apos;){ecrire_fichier(fichier,lignes)}
 
-} finally {
+} catch(e) {logger.info(&quot;Pas de données a extraire...&quot;);}
+finally {
 	if (dbConn) { 
 		dbConn.close();
 	}
@@ -86,8 +118,10 @@ try {
 	dbConn = DatabaseConnectionFactory.createDatabaseConnection(&apos;org.postgresql.Driver&apos;,&apos;jdbc:postgresql://localhost:5432/postgres&apos;,&apos;postgres&apos;,&apos;admin&apos;);
 
 	//marquer les éléments comme exporté pour suppression en fin de cycle...
-	var result = dbConn.executeUpdate(&quot;UPDATE ordsage SET statut=&apos;2&apos; WHERE statut=&apos;1&apos;&quot;);
-} finally {
+	//var result=dbConn.executeUpdate(&quot;UPDATE ordsage SET statut=&apos;2&apos; WHERE statut=&apos;1&apos;&quot;);
+	var result=dbConn.executeUpdate(&quot;DELETE FROM ordsage WHERE statut=&apos;1&apos;&quot;);
+} catch(e) {}
+finally {
 	if (dbConn) { 
 		dbConn.close();
 	}
@@ -159,7 +193,7 @@ return true;</update>
     <connector version="3.11.0">
       <metaDataId>1</metaDataId>
       <name>OutCSV</name>
-      <properties class="com.mirth.connect.connectors.jdbc.DatabaseDispatcherProperties" version="3.11.0">
+      <properties class="com.mirth.connect.connectors.file.FileDispatcherProperties" version="3.11.0">
         <pluginProperties/>
         <destinationConnectorProperties version="3.11.0">
           <queueEnabled>false</queueEnabled>
@@ -181,26 +215,24 @@ return true;</update>
           <queueBufferSize>1000</queueBufferSize>
           <reattachAttachments>true</reattachAttachments>
         </destinationConnectorProperties>
-        <driver>org.postgresql.Driver</driver>
-        <url>jdbc:postgresql://localhost:5432/postgres</url>
-        <username>postgres</username>
-        <password>admin</password>
-        <query>var dbConn;
-
-try {
-	dbConn = DatabaseConnectionFactory.createDatabaseConnection(&apos;org.postgresql.Driver&apos;,&apos;jdbc:postgresql://localhost:5432/postgres&apos;,&apos;postgres&apos;,&apos;admin&apos;);
-
-	//vider les èlèmznt qui on été extrait dasn l&apos;ordre.
-	dbConn.executeUpdate(&quot;TRUNCATE ordsage WHERE statut=&apos;2&apos;&quot;);
-
-} finally {
-	if (dbConn) { 
-		dbConn.close();
-	}
-}
-
-</query>
-        <useScript>true</useScript>
+        <scheme>FILE</scheme>
+        <host>c:/dev_chv/out</host>
+        <outputPattern>outsourcing.txt</outputPattern>
+        <anonymous>true</anonymous>
+        <username>anonymous</username>
+        <password>anonymous</password>
+        <timeout>10000</timeout>
+        <keepConnectionOpen>true</keepConnectionOpen>
+        <maxIdleTime>0</maxIdleTime>
+        <secure>true</secure>
+        <passive>true</passive>
+        <validateConnection>true</validateConnection>
+        <outputAppend>true</outputAppend>
+        <errorOnExists>false</errorOnExists>
+        <temporary>false</temporary>
+        <binary>false</binary>
+        <charsetEncoding>DEFAULT_ENCODING</charsetEncoding>
+        <template>${UUID}+&quot; &quot;+${originalFilename}+&quot; &quot;+${date.get(&apos;yyyy-M-d H.m.s&apos;)}</template>
       </properties>
       <transformer version="3.11.0">
         <elements/>
@@ -321,7 +353,7 @@ try {
       <filter version="3.11.0">
         <elements/>
       </filter>
-      <transportName>Database Writer</transportName>
+      <transportName>File Writer</transportName>
       <mode>DESTINATION</mode>
       <enabled>true</enabled>
       <waitForPrevious>true</waitForPrevious>
@@ -374,7 +406,7 @@ return;</undeployScript>
     <metadata>
       <enabled>true</enabled>
       <lastModified>
-        <time>1639725049531</time>
+        <time>1639738403237</time>
         <timezone>Europe/Paris</timezone>
       </lastModified>
       <pruningSettings>
