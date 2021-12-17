@@ -1,0 +1,21 @@
+CREATE TABLE public.ordsage (
+	c1 text NULL,
+	c2 date NULL,
+	c3 text NULL,
+	c4 text NULL,
+	c5 text NULL,
+	c6 text NULL,
+	c7 text NULL,
+	c8 text NULL,
+	c9 text NULL,
+	c10 text NULL,
+	c11 text NULL,
+	c12 text NULL,
+	c13 text NULL,
+	c14 text NULL,
+	c15 text NULL,
+	c16 text NULL,
+	c17 text NULL,
+	filename text NULL,
+	statut int4 NULL DEFAULT 0
+);
