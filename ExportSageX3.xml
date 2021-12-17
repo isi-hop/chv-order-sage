@@ -3,7 +3,7 @@
   <nextMetaDataId>2</nextMetaDataId>
   <name>ExportSageX3</name>
   <description></description>
-  <revision>25</revision>
+  <revision>26</revision>
   <sourceConnector version="3.11.0">
     <metaDataId>0</metaDataId>
     <name>sourceConnector</name>
@@ -66,7 +66,7 @@ FileUtil.write(destinationpath+&apos;/&apos;+nomfichier, false, lignes);
 try {
 	dbConn = DatabaseConnectionFactory.createDatabaseConnection(&apos;org.postgresql.Driver&apos;,&apos;jdbc:postgresql://localhost:5432/postgres&apos;,&apos;postgres&apos;,&apos;admin&apos;);
 
-	result = dbConn.executeCachedQuery(&quot;SELECT c1,to_char(c2,&apos;YYYYMMDD&apos;) as \&quot;c2\&quot;,c3,c4,c4,c5,c6,c7,c8,c9,c10,c11,c12,c13,c14,c15,c16,c17,filename FROM ordsage WHERE statut=&apos;1&apos; ORDER by filename, c1, c4, c2 asc&quot;);
+	result = dbConn.executeCachedQuery(&quot;SELECT c1,to_char(c2,&apos;YYYYMMDD&apos;) as \&quot;c2\&quot;,c3,c4,c4,c5,c6,c7,c8,c9,c10,c11,c12,c13,c14,c15,c16,c17,filename FROM ordsage WHERE statut=&apos;1&apos; ORDER by filename, c1, c2 asc&quot;);
 
 
 //traitement du résultat...:
@@ -406,7 +406,7 @@ return;</undeployScript>
     <metadata>
       <enabled>true</enabled>
       <lastModified>
-        <time>1639738403237</time>
+        <time>1639754858050</time>
         <timezone>Europe/Paris</timezone>
       </lastModified>
       <pruningSettings>
