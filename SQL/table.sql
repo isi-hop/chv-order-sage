@@ -17,5 +17,6 @@ CREATE TABLE public.ordsage (
 	c16 text NULL,
 	c17 text NULL,
 	filename text NULL,
-	statut int4 NULL DEFAULT 0
+	statut int4 NULL DEFAULT 0,
+	id int4 NOT NULL GENERATED ALWAYS AS IDENTITY
 );
